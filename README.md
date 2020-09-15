@@ -133,18 +133,32 @@ class mt1000a:
             time.sleep(2)
             type2 = mt1000a.reqData("ETH:PORT2:ITYP?")
             if type1 == type2 == "SFPP":
-                print("Pass")
+                cmd = 'ETH:PORT1:STR1:MAC:SOUR "00-50-C2-35-D2-EF"'
+                self.sendCmd(cmd)
+                time.sleep(1)
+                cmd = 'ETH:PORT2:STR1:MAC:DEST "00-50-C2-35-D2-EF"'
+                self.sendCmd(cmd)
+                cmd = "ETH:PORT1:TRAF:STR1:LL 10.0000"
+                self.sendCmd(cmd)
+                time.sleep(1)
+                cmd = "ETH:PORT2:TRAF:STR1:LL 10.0000"
+                self.sendCmd(cmd)
+                time.sleep(1)
+                cmd = "MEAS:SET:ILEN 1S"  # interval length
+                self.sendCmd(cmd)
+                cmd = "ETH:PORT1:SETT:ASTG ON"
+                self.sendCmd(cmd)
+                time.sleep(1)
+                cmd = 'ETH:PORT2:SETT:ASTG ON'
+                self.sendCmd(cmd)
+                time.sleep(1)
+                cmd = 'INST:STAR:GUI'
+                self.sendCmd(cmd)
+                mt1000a.toggleTrafficON()
+        else:
+            mt1000a.config_bert_eth_1gb()
 
 
-        time.sleep(2)
-        # cmd = '*CLS'
-        #self.sendCmd(cmd)
-        # cmd = "ETH:PORT1:ITYP?"
-        # self.sendCmd(cmd)
-        # time.sleep(1)
-        # type = mt1000a.reqData("ETH:PORT1:ITYP?")
-        # time.sleep(3)
-        # mt1000a.reqData("ETH:PORT2:ITYP?")
 
 
 mt1000a = mt1000a("192.168.200.5")
