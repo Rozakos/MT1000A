@@ -3,7 +3,7 @@ import socket
 
 
 class mt1000a:
-    def __init__(self, ip, timeout=15):
+    def __init__(self, ip, timeout=10):
         try:
             self.ip = ip
             self.soc_1000a = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -34,7 +34,7 @@ class mt1000a:
             print("Error: " + str(error))
             return error
 
-    def reqData(self, cmd, timeout=15):
+    def reqData(self, cmd, timeout=10):
         #gets str type, returns str parameter
         cmd = cmd + '\n'
         self.soc_1000a.settimeout(timeout)
@@ -155,8 +155,8 @@ class mt1000a:
                 cmd = 'INST:STAR:GUI'
                 self.sendCmd(cmd)
                 mt1000a.toggleTrafficON()
-        else:
-            mt1000a.config_bert_eth_1gb()
+            else:
+                mt1000a.config_bert_eth_1gb()
 
 
 
