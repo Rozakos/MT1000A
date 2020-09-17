@@ -1,5 +1,6 @@
 import time
 import socket
+import re
 
 
 class mt1000a:
@@ -47,6 +48,8 @@ class mt1000a:
             data = data.decode('UTF-8', 'ignore')
             data = data.rstrip("\n")
             data = data.strip('"')
+            data = data.strip("()")
+            data = data.rsplit(',', maxsplit=1)[0]
             print(data)
             return data
         except:
@@ -125,13 +128,13 @@ class mt1000a:
     def bert_check(self):
         # cmd = "SYST:PROM 0"
         # self.sendCmd(cmd)
-        inst = mt1000a.reqData("INST?")
+        inst = self.reqData("INST?")
         if inst == '-1':
             self.sendCmd("INST:CONN:ALL")
             time.sleep(1)
-            type1 = mt1000a.reqData("ETH:PORT1:ITYP?")
+            type1 = self.reqData("ETH:PORT1:ITYP?")
             time.sleep(2)
-            type2 = mt1000a.reqData("ETH:PORT2:ITYP?")
+            type2 = self.reqData("ETH:PORT2:ITYP?")
             if type1 == type2 == "SFPP":
                 cmd = 'ETH:PORT1:STR1:MAC:SOUR "00-50-C2-35-D2-EF"'
                 self.sendCmd(cmd)
@@ -154,20 +157,26 @@ class mt1000a:
                 time.sleep(1)
                 cmd = 'INST:STAR:GUI'
                 self.sendCmd(cmd)
-                mt1000a.toggleTrafficON()
+                self.toggleTrafficON()
             else:
-                mt1000a.config_bert_eth_1gb()
+                self.config_bert_eth_1gb()
+
+    def idn_check(self):
+        self.reqData("*IDN?")
 
 
 
-
-mt1000a = mt1000a("192.168.200.5")
-mt1000a.bert_check()
-# mt1000a.config_bert_eth_1gb()
-# time.sleep(10)
+# mt1000a = mt1000a("192.168.200.5")
+# mt1000a.idn_check()
+# #
+# mt1000a.bert_check()
+# # time.sleep(10)
+# cmd = '*CLS'
+# mt1000a.sendCmd(cmd)
 # mt1000a.toggleTrafficON()
-# time.sleep(20)
-# mt1000a.reqData("ETH:PORT1:IFET? (BPE)") #Pattern Errors
+# time.sleep(2)
+# mt1000a.toggleTrafficOFF()
+# output = mt1000a.reqData("ETH:PORT1:IFET? (BPE)") #Pattern Errors
 # time.sleep(1)
 # mt1000a.reqData("ETH:PORT1:IFET? (BSE)") #Sequence Errors
 # time.sleep(1)
@@ -188,6 +197,3 @@ mt1000a.bert_check()
 # time.sleep(1)
 # cmd = '*CLS'
 # mt1000a.sendCmd(cmd)
-
-
-
