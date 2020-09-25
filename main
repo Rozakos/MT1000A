@@ -1,0 +1,82 @@
+from threading import Thread
+from tkinter.ttk import *
+import serial
+import tkinter as tk
+import tkinter.ttk as ttk
+from tkinter import *
+import re
+import time
+from datetime import datetime
+import os
+import openpyxl
+from openpyxl import load_workbook
+import copy
+import socket
+from tkinter import messagebox
+import visa
+from tkinter import *
+from tkinter import ttk
+from tkinter import scrolledtext
+
+GUI_WIDTH = 1200
+GUI_HEIGHT = 700
+
+master = Tk()
+
+gui_resolution = str(GUI_WIDTH) + 'x' + str(GUI_HEIGHT) + '+0+0'
+master.geometry(gui_resolution)
+master.resizable(FALSE, FALSE)
+master.title("INTRACOM TELECOM")
+
+testsFrame = LabelFrame(master, width=GUI_WIDTH / 4, height=GUI_HEIGHT * .95, text='Tests')
+testsFrame.grid(column=0, row=0, sticky=N)
+monFrame = LabelFrame(master, width=GUI_WIDTH * 2, height=GUI_HEIGHT * .55, text='Serial Connection Output')
+monFrame.grid(column=2, row=0, sticky=N)
+configFrame = LabelFrame(master, width=GUI_WIDTH / 4, height=GUI_HEIGHT * .95, text='Configuration')
+configFrame.grid(column=3, row=0, sticky=N)
+sysinfoFrame = LabelFrame(master, width=GUI_WIDTH / 5, height=GUI_HEIGHT * .30, text='System Info')
+sysinfoFrame.grid(column=3, row=0, sticky=W)
+# indicatorFrame = LabelFrame(master, width=GUI_WIDTH/5, height=GUI_HEIGHT*.30, text='System Info')
+# indicatorFrame.grid(column=2, row=0, sticky=N)
+
+def write(string):
+    text_box.config(state=tk.NORMAL)
+    text_box.insert("end", string + "\n")
+    text_box.see("end")
+    text_box.config(state=tk.DISABLED)
+
+
+def on_select(event=None):
+    print('----------------------------')
+
+    if event:  # <-- this works only with bind because `command=` doesn't send event
+        print("event.widget:", event.widget.get())
+        resultList[6] = event.widget.get()
+
+    for i, x in enumerate(all_comboboxes):
+        print("all_comboboxes[%d]: %s" % (i, x.get()))
+        resultList[6] = event.widget.get()
+        print(resultList[6])
+        write('Ycode: ' + resultList[6] + '\n')
+
+
+all_comboboxes = []
+
+cb = ttk.Combobox(testsFrame, values=("", "2", "3", "4", "5"))
+cb.set("")
+cb.grid(column=1, row=0, sticky=W, pady=5)
+cb.bind('<<ComboboxSelected>>', on_select)
+
+all_comboboxes.append(cb)
+
+Ycode_entry_label = Label(configFrame, text="Select YCode")
+Ycode_entry_label.grid(column=0, row=0, sticky=W, pady=5)
+
+text_box = tk.Text(monFrame, state=tk.DISABLED, width=60, height=35)
+text_box.grid(row=0, column=0, padx=20, pady=20)
+
+
+
+
+master.mainloop()
+
